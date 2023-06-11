@@ -1,0 +1,129 @@
+﻿@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    var currentPage = ViewBag.CurrentPage;
+    var pageSize = ViewBag.PageSize;
+    var totalCount = ViewBag.TotalCount;
+    var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+}
+<h1>All Users</h1>
+
+
+
+
+
+<partial name="_FormSearch"/>
+<partial name="_AddNewUser" model="new MSTART_Task.ViewModels.UserViewModel()" />
+
+
+
+@if (Model.Any())
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    First name
+                </th>
+                <th>
+                    Last name
+                </th>
+                <th>
+                    Email Address
+                </th>
+                <th>
+                    Username
+                </th>
+                <th>
+                    Stutus
+                </th>
+                <th>
+                    Actions
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <form asp-action="DeleteUsers">
+                <button class="btn btn-danger mt-3" type="submit">Delete Selected Users</button>
+                @foreach (var user in Model)
+                {
+                <tr>
+                    <td>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                   name="userIds" value="@user.Id"
+                                @(user.Status == 0 ? "disabled " : "") />
+                            <label class="form-check-label" for="inlineCheckbox1">@user.Id</label>
+                        </div>
+
+                    </td>
+                    <td>
+                            @user.First_Name
+                    </td>
+                    <td>
+                            @user.Last_Name
+                    </td>
+                    <td>
+                            @user.Email
+                    </td>
+                    <td>
+                            @user.Username
+                    </td>
+
+                    <td>
+                            @(user.Status == 1 ? "Active" : "Deleted")
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@user.Id">Details</a> |
+                        <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@user.Id">Edit</a> 
+
+                    </td>
+                </tr>
+                }
+
+
+            </form>
+        </tbody>
+    </table>
+
+
+    <nav aria-label="...">
+        <ul class="pagination">
+
+            @for (var i = 1; i <= totalPages; i++)
+            {
+
+                <li class="page-item  @(i == currentPage ? "active" : "") " aria-current="page">
+                    <a class=" page-link" asp-action="Index" asp-route-page="@i" asp-route-pageSize="@pageSize">@i</a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+
+}
+else
+{
+    <div class="alert alert-warning mt-3">
+        <p>No Data <a asp-action="Index">Click to view All User</a></p>
+    </div>
+}
+
+
+
+@section Scripts{
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+}
+
+

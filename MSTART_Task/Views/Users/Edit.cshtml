@@ -1,0 +1,67 @@
+﻿@using MSTART_Task.Enums;
+@model MSTART_Task.ViewModels.UserViewModel
+
+
+<h2>Edit User</h2>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label for="Username">Username:</label>
+        <input type="text" class="form-control" id="Username" name="Username" value="@Model.Username" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="First_Name">First Name:</label>
+        <input type="text" class="form-control" id="First_Name" name="First_Name" value="@Model.First_Name" />
+        <span asp-validation-for="First_Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Last_Name">Last Name:</label>
+        <input type="text" class="form-control" id="Last_Name" name="Last_Name" value="@Model.Last_Name" />
+        <span asp-validation-for="Last_Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Status">Status:</label>
+        <select class="form-control" id="Status" name="Status">
+            @foreach (var status in Enum.GetValues(typeof(UserStatus)))
+            {
+                <!option value="@status" @(Model.Status == (UserStatus)status ? "selected" : "")>@status</!option>
+            }
+        </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Gender">Gender:</label>
+        <select class="form-control" id="Gender" name="Gender">
+            @foreach (var gender in Enum.GetValues(typeof(Gender)))
+            {
+                <!option value="@gender" @(Model.Gender == (Gender)gender ? "selected" : "") >@gender</!option>
+
+            }
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Date_Of_Birth">Date of Birth:</label>
+        <input type="date" class="form-control" id="Date_Of_Birth" name="Date_Of_Birth" value="@Model.Date_Of_Birth.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="Date_Of_Birth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <input type="submit" value="Save & Continue" asp-route-continueEditing=true class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+@section Scripts {
+    <!-- Render the necessary partial view for validation scripts -->
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

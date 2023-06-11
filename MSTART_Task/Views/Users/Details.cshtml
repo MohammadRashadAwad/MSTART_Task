@@ -1,0 +1,67 @@
+﻿@model MSTART_Task.Models.User
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>@(Model.First_Name) @(Model.Last_Name)</h4>
+    <hr />
+    <div class="row">
+        <p class = "col-sm-4">
+            Server DateTime
+        </p>
+        <p class = "col-sm-8">
+            @Model.Server_DateTime
+        </p>
+        <p class = "col-sm-4">
+            DateTime UTC
+        </p>
+        <p class = "col-sm-8">
+            @Model.DateTime_UTC
+        </p>
+        <p class = "col-sm-4">
+            Update DateTime UTC
+        </p>
+        <p class = "col-sm-8">
+            @Model.Update_DateTime_UTC
+        </p>
+        <p class = "col-sm-4">
+            Username
+        </p>
+        <p class = "col-sm-8">
+            @Model.Username
+        </p>
+        <p class = "col-sm-4">
+            Email
+        </p>
+        <p class = "col-sm-8">
+            @Model.Email)
+        </p>
+        
+        
+        <p class = "col-sm-4">
+            Status
+        </p>
+        <p class = "col-sm-8">
+            @(Model.Status == 1 ? "Active" : "Deleted")
+        </p>
+        <p class = "col-sm-4">
+           Gender
+        </p>
+        <p class = "col-sm-8">
+            @(Model.Gender == 1 ? "Male" : "Female")
+        </p>
+        <p class = "col-sm-4">
+           Date Of Birth
+        </p>
+        <p class = "col-sm-8">
+            @Model.Date_Of_Birth
+        </p>
+    </div>
+</div>
+<div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+</div>
