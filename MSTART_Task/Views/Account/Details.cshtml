@@ -1,0 +1,58 @@
+﻿@model MSTART_Task.Models.Account
+
+@{
+    ViewData["Title"] = "Account Information";
+}
+
+<h1>Account Information </h1>
+
+<div>
+    <h4>Account Number : @Model.Account_Number</h4>
+    <hr />
+    <div class="row">
+        <p class="col-sm-4">
+            Server DateTime
+        </p>
+        <p class="col-sm-8">
+            @Model.Server_DateTime
+        </p>
+        <p class="col-sm-4">
+            DateTime UTC
+        </p>
+        <p class="col-sm-8">
+            @Model.DateTime_UTC
+        </p>
+        <p class="col-sm-4">
+            Update DateTime UTC
+        </p>
+        <p class="col-sm-8">
+            @Model.Update_DateTime_UTC
+        </p>
+        <p class="col-sm-4">
+            Username
+        </p>
+        <p class="col-sm-8">
+            @Model.User.Username
+        </p>
+        <p class="col-sm-4">
+            Email
+        </p>
+        <p class="col-sm-8">
+            @Model.User.Email)
+        </p>
+
+
+        <p class="col-sm-4">
+            Status
+        </p>
+        <p class="col-sm-8">
+            @(Enum.GetNames(typeof(Status)).GetValue(Model.Status))
+        </p>
+       
+      
+    </div>
+</div>
+<div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+</div>
+

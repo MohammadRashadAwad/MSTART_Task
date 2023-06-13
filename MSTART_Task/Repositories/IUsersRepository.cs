@@ -8,9 +8,9 @@ namespace MSTART_Task.Repositories
     {
        Task<IEnumerable<User>>GetAll(string search, int page , int pageSize);
        Task<User> GetById(int id);
-       Task Delete (List<int> userIds);
+       Task<bool> Delete (List<int> userIds);
        Task<bool> AddNew(UserViewModel model);
-       Task<bool> Update (UserViewModel model);   
+       Task<bool> Update (UserViewModel model, bool continueEditing);   
        
 
 

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MSTART_Task.Enums;
+using MSTART_Task.Helper;
 using MSTART_Task.Models;
 using MSTART_Task.Services;
 using MSTART_Task.ViewModels;
@@ -11,10 +14,12 @@ namespace MSTART_Task.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly INotificationService _notification;
+
         public UsersRepository(ApplicationDbContext context, INotificationService notification)
         {
             _context = context;
             _notification = notification;
+
         }
 
         public async Task<bool> AddNew(UserViewModel model)
@@ -29,7 +34,7 @@ namespace MSTART_Task.Repositories
                 _notification.Warning("The Email address is already exist");
                 return false;
             }
-            var user = MapUserViewModelToUser(model);
+            var user = Mapper.MapUserViewModelToUser(model);
             await _context.Users.AddAsync(user);
             _context.SaveChanges();
             _notification.Successfully("User added successfully");
@@ -38,16 +43,30 @@ namespace MSTART_Task.Repositories
 
         }
 
-        public async Task Delete(List<int> userIds)
+        public async Task<bool> Delete(List<int> userIds)
         {
             foreach (var userId in userIds)
             {
 
-                Console.WriteLine("========================");
-                Console.WriteLine(userId);
-                Console.WriteLine("=========================");
-            }
+                var user = await GetById(userId);
+                if (user == null) {
+                    _notification.Warning("Something is wrong");
+                    return false;
+                }
+                user.Status = 0;
+                var accounts = await _context.Account.Where(u => u.User_ID == userId).ToListAsync();
+                if (accounts.Any())
+                {
+                    foreach (var account in accounts)
+                    {
+                        account.Status = 0;
+                    }
+                }
+               
 
+            }
+            _context.SaveChanges();
+            return true;
         }
 
         public async Task<IEnumerable<User>> GetAll(string search, int page, int pageSize)
@@ -76,7 +95,7 @@ namespace MSTART_Task.Repositories
 
         }
 
-        public async Task<bool> Update(UserViewModel model)
+        public async Task<bool> Update(UserViewModel model, bool continueEditing)
         {
             var existingUser = await GetById(model.Id);
 
@@ -91,57 +110,56 @@ namespace MSTART_Task.Repositories
                 existingUser.Gender = (int)model.Gender;
                 existingUser.Status = (int)model.Status;
 
-                //var result = MapUserViewModelToUser(model);
-                //_context.Users.Update(result);
                 await _context.SaveChangesAsync();
+                if (continueEditing)
+                {
+                    _notification.Successfully("The information has been saved successfully");
+                }
+                else
+                {
+                    _notification.Successfully("Information has been updated and success");
+                }
+
 
                 return true;
             }
-            if (await IsUsernameExist(model.Username,model.Id))
+            if (await IsUsernameExist(model.Username, model.Id))
             {
                 _notification.Warning("The Username already exists");
                 return false;
             }
-            if (await IsEmailExist(model.Email,model.Id))
+            if (await IsEmailExist(model.Email, model.Id))
             {
                 _notification.Warning("The Email address already exists");
                 return false;
             }
 
-            var newUser = MapUserViewModelToUser(model);
+            var newUser = Mapper.MapUserViewModelToUser(model);
             _context.Users.Update(newUser);
             await _context.SaveChangesAsync();
+            if (continueEditing)
+            {
+                _notification.Successfully("The information has been saved successfully");
+            }
+            else
+            {
+                _notification.Successfully("The information has been updated successfully");
+            }
 
             return true;
         }
 
         private async Task<bool> IsUsernameExist(string username, int id)
         {
-            return await _context.Users.AnyAsync(u => u.Username == username && u.Id !=id);
+            return await _context.Users.AnyAsync(u => u.Username == username && u.Id != id);
         }
 
-        private async Task<bool> IsEmailExist(string email,int id )
+        private async Task<bool> IsEmailExist(string email, int id)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email && u.Id !=id);
+            return await _context.Users.AnyAsync(u => u.Email == email && u.Id != id);
         }
 
-        private User MapUserViewModelToUser(UserViewModel model)
-        {
-            return new User
-            {
-                Id = model.Id,
-                First_Name = model.First_Name,
-                Last_Name = model.Last_Name,
-                Username = model.Username,
-                Email = model.Email,
-                DateTime_UTC = model.DateTime_UTC,
-                Date_Of_Birth = model.Date_Of_Birth,
-                Update_DateTime_UTC = model.Update_DateTime_UTC,
-                Server_DateTime = model.Server_DateTime,
-                Gender = (int)model.Gender,
-                Status = (int)model.Status,
-            };
-        }
+
 
 
 

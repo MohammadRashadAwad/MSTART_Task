@@ -11,5 +11,6 @@
         public decimal Balance { get; set; }
         public string Currency { get; set; }
         public int Status { get; set; }
+        public User User { get; set; }
     }
 }

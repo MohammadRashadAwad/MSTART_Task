@@ -24,7 +24,7 @@ namespace MSTART_Task.ViewModels
         [Required]
         public string Last_Name { get; set; }
         [Required]
-        public UserStatus Status { get; set; }
+        public Status Status { get; set; }
         [Required]
         public Gender Gender { get; set; }
         [Required]

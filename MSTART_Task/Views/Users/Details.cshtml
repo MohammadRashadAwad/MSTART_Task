@@ -1,10 +1,10 @@
 ﻿@model MSTART_Task.Models.User
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "User Information";
 }
 
-<h1>Details</h1>
+<h1>User Information </h1>
 
 <div>
     <h4>@(Model.First_Name) @(Model.Last_Name)</h4>
@@ -46,13 +46,13 @@
             Status
         </p>
         <p class = "col-sm-8">
-            @(Model.Status == 1 ? "Active" : "Deleted")
+            @(Enum.GetNames(typeof(Status)).GetValue(Model.Status))
         </p>
         <p class = "col-sm-4">
            Gender
         </p>
         <p class = "col-sm-8">
-            @(Model.Gender == 1 ? "Male" : "Female")
+            @(Enum.GetNames(typeof(Gender)).GetValue(Model.Gender))
         </p>
         <p class = "col-sm-4">
            Date Of Birth

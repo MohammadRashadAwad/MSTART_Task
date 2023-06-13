@@ -11,7 +11,8 @@ builder.Services.AddControllersWithViews();
 // Register  Services
 var DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(DefaultConnection));
-builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions
 {
     ProgressBar =true,
@@ -20,6 +21,7 @@ builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions
     CloseButton = true,
 });
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
